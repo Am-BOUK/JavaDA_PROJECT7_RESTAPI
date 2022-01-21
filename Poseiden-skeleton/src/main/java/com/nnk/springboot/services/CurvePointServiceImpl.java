@@ -1,5 +1,7 @@
 package com.nnk.springboot.services;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +66,9 @@ public class CurvePointServiceImpl implements ICurvePointService {
 			throw new EntityAlreadyExistException("The curve point id : " + curvePoint.getId() + ", you want to add, is already exists!");
 		}
 		logger.info("add curve point id : " + curvePoint.getId());
+		Date currentDate = new Date();
+		Timestamp creationCurveTimestamp = new Timestamp(currentDate.getTime());
+		curvePoint.setCreationDate(creationCurveTimestamp);
 		return curvePointRepository.save(curvePoint);
 	}
 
@@ -91,7 +96,7 @@ public class CurvePointServiceImpl implements ICurvePointService {
 				.setTerm(curvePoint.getTerm() != null ? curvePoint.getTerm() : curvePointFound.get().getTerm());
 		curvePointFound.get()
 				.setValue(curvePoint.getValue() != null ? curvePoint.getValue() : curvePointFound.get().getValue());
-
+		
 		return curvePointRepository.saveAndFlush(curvePointFound.get());
 	}
 
