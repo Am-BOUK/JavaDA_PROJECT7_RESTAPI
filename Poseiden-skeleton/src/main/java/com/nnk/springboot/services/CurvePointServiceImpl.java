@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exception.EntityAlreadyExistException;
+import com.nnk.springboot.exception.EntityNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 
 @Service
-public class CurvePointServiceImpl implements ICurvePointService{
+public class CurvePointServiceImpl implements ICurvePointService {
 	private static final Logger logger = LogManager.getLogger("CurvePointServiceImpl");
 
 	/**
@@ -20,6 +22,27 @@ public class CurvePointServiceImpl implements ICurvePointService{
 	 */
 	@Autowired
 	private CurvePointRepository curvePointRepository;
+
+	/**
+	 * Get One user Curve point ** This operation allows to check if the curveId of
+	 * the curve we want to get its information already exist in the database, then
+	 * allows to use its curveId to get it
+	 * 
+	 * @param curveId : curveId of the curvePoint object whose we want to get
+	 * @return curvePoint object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	@Override
+	public CurvePoint getCurvePoint(Integer id) throws EntityNotFoundException {
+		logger.info("Getting curvePoint for curveID : " + id);
+		Optional<CurvePoint> curveFound = curvePointRepository.findById(id);
+		if (curveFound.isEmpty()) {
+			logger.error("The curvePoint id : " + id + ", you want to get, does not exist!");
+			throw new EntityNotFoundException("The curvePoint id : " + id + ", you want to get, does not exist!");
+		}
+		logger.info("The curvePoint id : " + id + ",is found!");
+		return curveFound.get();
+	}
 
 	/**
 	 * 
@@ -30,15 +53,15 @@ public class CurvePointServiceImpl implements ICurvePointService{
 	 *
 	 * @param curvePoint : curvePoint object to add
 	 * @return curvePoint object added
-	 * @throws Exception
+	 * @throws EntityAlreadyExistException 
 	 */
 	@Override
-	public CurvePoint addCurvePoint(CurvePoint curvePoint) throws Exception {
+	public CurvePoint addCurvePoint(CurvePoint curvePoint) throws EntityAlreadyExistException {
 		logger.info("adding a new curve point");
-		Optional<CurvePoint> curvePointFound = curvePointRepository.findById(curvePoint.getId());
+		Optional<CurvePoint> curvePointFound = curvePointRepository.findByCurveId(curvePoint.getCurveId());
 		if (curvePointFound.isPresent()) {
 			logger.error("The curve point id : " + curvePoint.getId() + ", you want to add, is already exists!");
-			throw new Exception("The curve point id : " + curvePoint.getId() + ", you want to add, is already exists!");
+			throw new EntityAlreadyExistException("The curve point id : " + curvePoint.getId() + ", you want to add, is already exists!");
 		}
 		logger.info("add curve point id : " + curvePoint.getId());
 		return curvePointRepository.save(curvePoint);
@@ -51,15 +74,15 @@ public class CurvePointServiceImpl implements ICurvePointService{
 	 * @param id         : the id of the bid we want to update
 	 * @param curvePoint : the curvePoint Object updated
 	 * @return curvePoint object updated
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public CurvePoint updateCurvePoint(Integer id, CurvePoint curvePoint) throws Exception {
+	public CurvePoint updateCurvePoint(Integer id, CurvePoint curvePoint) throws EntityNotFoundException {
 		logger.info("updating the curve point");
-		Optional<CurvePoint> curvePointFound = curvePointRepository.findById(curvePoint.getId());
+		Optional<CurvePoint> curvePointFound = curvePointRepository.findById(id);
 		if (curvePointFound.isEmpty()) {
 			logger.error("The curve point id : " + id + ", you want to update, does not exist!");
-			throw new Exception("The curve point id : " + id + ", you want to update, does not exist!");
+			throw new EntityNotFoundException("The curve point id : " + id + ", you want to update, does not exist!");
 		}
 		logger.info("update curve point id : " + id);
 		curvePointFound.get().setCurveId(
@@ -90,15 +113,15 @@ public class CurvePointServiceImpl implements ICurvePointService{
 	 * use its id to delete it
 	 * 
 	 * @param id : id of the CurvePoint we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public void deleteCurvePoint(Integer id) throws Exception {
+	public void deleteCurvePoint(Integer id) throws EntityNotFoundException {
 		logger.info("deleting a CurvePoint");
 		Optional<CurvePoint> curvePointFound = curvePointRepository.findById(id);
 		if (curvePointFound.isEmpty()) {
 			logger.error("The curve point id : " + id + ", you want to delete, does not exist!");
-			throw new Exception("The curve point id : " + id + ", you want to delete, does not exist!");
+			throw new EntityNotFoundException("The curve point id : " + id + ", you want to delete, does not exist!");
 		}
 
 		logger.info("delete the curve point id " + id);

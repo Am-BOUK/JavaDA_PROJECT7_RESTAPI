@@ -3,32 +3,38 @@ package com.nnk.springboot.services;
 import java.util.List;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exception.EntityAlreadyExistException;
+import com.nnk.springboot.exception.EntityNotFoundException;
 
 public interface ICurvePointService {
+	/**
+	 * Get One user Curve point
+	 * 
+	 * @param curveId : curveId of the curvePoint object whose we want to get
+	 * @return curvePoint object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	public CurvePoint getCurvePoint(Integer id) throws EntityNotFoundException;
 
 	/**
 	 * 
-	 * Add a new curvePoint ** This operation allows to check if the id of the
-	 * curvePoint we want to add already exists in the database, then allows to add
-	 * it
-	 * 
+	 * Add a new curvePoint
 	 *
 	 * @param curvePoint : curvePoint object to add
 	 * @return curvePoint object added
-	 * @throws Exception
+	 * @throws EntityAlreadyExistException
 	 */
-	CurvePoint addCurvePoint(CurvePoint curvePoint) throws Exception;
+	public CurvePoint addCurvePoint(CurvePoint curvePoint) throws EntityAlreadyExistException;
 
 	/**
-	 * Update information of the curvePoint ** This operation allows to check if the
-	 * id of the curvePoint we want to update already exists in the database,
+	 * Update information of the curvePoint
 	 * 
 	 * @param id         : the id of the bid we want to update
 	 * @param curvePoint : the curvePoint Object updated
 	 * @return curvePoint object updated
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	CurvePoint updateCurvePoint(Integer id, CurvePoint curvePoint) throws Exception;
+	CurvePoint updateCurvePoint(Integer id, CurvePoint curvePoint) throws EntityNotFoundException;
 
 	/**
 	 * get all curvePoints
@@ -38,13 +44,11 @@ public interface ICurvePointService {
 	List<CurvePoint> curvePointList();
 
 	/**
-	 * Delete the CurvePoint ** This operation allows to check if the id of te
-	 * CurvePoint we want to delete already exist in the database, then allows to
-	 * use its id to delete it
+	 * Delete the CurvePoint
 	 * 
 	 * @param id : id of the CurvePoint we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	void deleteCurvePoint(Integer id) throws Exception;
+	void deleteCurvePoint(Integer id) throws EntityNotFoundException;
 
 }
