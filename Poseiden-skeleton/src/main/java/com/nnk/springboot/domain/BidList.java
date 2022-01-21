@@ -33,7 +33,7 @@ public class BidList {
 	private Double ask;
 	@Column(length = 125)
 	private String benchmark;
-	private Timestamp bidListDate;
+	private Timestamp bidListDate; /**/
 	@Column(length = 125)
 	private String commentary;
 	@Column(length = 125)
@@ -58,6 +58,28 @@ public class BidList {
 	private String sourceListId;
 	@Column(length = 125)
 	private String side;
+	
+	
+
+	@Override
+	public String toString() {
+		return "BidList [account=" + account + ", type=" + type + ", bidQuantity=" + bidQuantity + ", askQuantity="
+				+ askQuantity + ", bid=" + bid + ", ask=" + ask + ", benchmark=" + benchmark + ", bidListDate="
+				+ bidListDate + ", commentary=" + commentary + ", security=" + security + ", status=" + status
+				+ ", trader=" + trader + ", book=" + book + ", creationName=" + creationName + ", creationDate="
+				+ creationDate + ", revisionName=" + revisionName + ", revisionDate=" + revisionDate + ", dealName="
+				+ dealName + ", dealType=" + dealType + ", sourceListId=" + sourceListId + ", side=" + side
+				+ ", getBidListId()=" + getBidListId() + ", getAccount()=" + getAccount() + ", getType()=" + getType()
+				+ ", getBidQuantity()=" + getBidQuantity() + ", getAskQuantity()=" + getAskQuantity() + ", getBid()="
+				+ getBid() + ", getAsk()=" + getAsk() + ", getBenchmark()=" + getBenchmark() + ", getBidListDate()="
+				+ getBidListDate() + ", getCommentary()=" + getCommentary() + ", getSecurity()=" + getSecurity()
+				+ ", getStatus()=" + getStatus() + ", getTrader()=" + getTrader() + ", getBook()=" + getBook()
+				+ ", getCreationName()=" + getCreationName() + ", getCreationDate()=" + getCreationDate()
+				+ ", getRevisionName()=" + getRevisionName() + ", getRevisionDate()=" + getRevisionDate()
+				+ ", getDealName()=" + getDealName() + ", getDealType()=" + getDealType() + ", getSourceListId()="
+				+ getSourceListId() + ", getSide()=" + getSide() + ", getClass()=" + getClass() + ", hashCode()="
+				+ hashCode() + ", toString()=" + super.toString() + "]";
+	}
 
 	public BidList(@NotBlank(message = "Account is mandatory") String account,
 			@NotBlank(message = "Type is mandatory") String type,
