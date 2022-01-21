@@ -28,6 +28,16 @@ public class Rating {
 		this.fitchRating = fitchRating;
 		this.orderNumber = orderNumber;
 	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "Rating [id=" + id + ", moodysRating=" + moodysRating + ", sandPRating=" + sandPRating + ", fitchRating="
+				+ fitchRating + ", orderNumber=" + orderNumber + "]";
+	}
+
+
 
 	public Integer getId() {
 		return id;

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exception.EntityNotFoundException;
 import com.nnk.springboot.repositories.RatingRepository;
 
 @Service
@@ -23,6 +24,27 @@ public class RatingServiceImpl implements IRatingService {
 	private RatingRepository ratingRepository;
 
 	/**
+	 * Get One Rating object ** This operation allows to check if the id of the
+	 * Rating we want to get its information already exist in the database, then
+	 * allows to use its id to get him
+	 * 
+	 * @param id : id of the rating object which we want to get
+	 * @return rating object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	@Override
+	public Rating getRating(Integer id) throws EntityNotFoundException {
+		logger.info("Getting Rating : " + id);
+		Optional<Rating> ratingFound = ratingRepository.findById(id);
+		if (ratingFound.isEmpty()) {
+			logger.error("The rating id : " + id + ", you want to get, does not exist!");
+			throw new EntityNotFoundException("The rating id : " + id + ", you want to get, does not exist!");
+		}
+		logger.info("the rating id : " + id + ", is found !");
+		return ratingFound.get();
+	}
+
+	/**
 	 * 
 	 * Add a new rating ** This operation allows to check if the id of the rating we
 	 * want to add already exists in the database, then allows to add it
@@ -30,18 +52,10 @@ public class RatingServiceImpl implements IRatingService {
 	 *
 	 * @param rating : rating object to add
 	 * @return rating object added
-	 * @throws Exception
 	 */
 	@Override
-	public Rating addNewRating(Rating rating) throws Exception {
-		logger.info("adding new rating");
-		Optional<Rating> ratingFound = ratingRepository.findById(rating.getId());
-		if (ratingFound.isPresent()) {
-			logger.error("The rating id : " + rating.getId() + ", you want to add, is already exists!");
-			throw new Exception("The rating id : " + rating.getId() + ", is already exists!");
-		}
-
-		logger.info("add rating id : " + rating.getId());
+	public Rating addNewRating(Rating rating) {
+		logger.info("add rating id : " + rating.toString());
 		return ratingRepository.save(rating);
 	}
 
@@ -52,15 +66,15 @@ public class RatingServiceImpl implements IRatingService {
 	 * @param id     : the id of the rating we want to update
 	 * @param rating : the rating Object updated
 	 * @return rating object updated
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public Rating updateBide(Integer id, Rating rating) throws Exception {
+	public Rating updateRating(Integer id, Rating rating) throws EntityNotFoundException {
 		logger.info("updating a Rating");
 		Optional<Rating> ratingFound = ratingRepository.findById(rating.getId());
 		if (ratingFound.isEmpty()) {
 			logger.error("The rating id : " + id + ", you want to update, does not exist!");
-			throw new Exception("The rating id : " + id + ", is already exists!");
+			throw new EntityNotFoundException("The rating id : " + id + ", is already exists!");
 		}
 		logger.info("update rating id : " + id);
 		ratingFound.get().setFitchRating(
@@ -93,15 +107,15 @@ public class RatingServiceImpl implements IRatingService {
 	 * delete it
 	 * 
 	 * @param id : id of the rating we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public void deleteRating(Integer id) throws Exception {
+	public void deleteRating(Integer id) throws EntityNotFoundException {
 		logger.info("deleting a rating");
 		Optional<Rating> ratingFound = ratingRepository.findById(id);
 		if (ratingFound.isEmpty()) {
 			logger.error("The rating id : " + id + ", you want to delete, does not exist!");
-			throw new Exception("The rating id : " + id + ", you want to delete, does not exist!");
+			throw new EntityNotFoundException("The rating id : " + id + ", you want to delete, does not exist!");
 		}
 
 		logger.info("delete the rating id " + id);

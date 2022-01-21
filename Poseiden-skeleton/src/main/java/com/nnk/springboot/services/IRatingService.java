@@ -3,31 +3,37 @@ package com.nnk.springboot.services;
 import java.util.List;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exception.EntityAlreadyExistException;
+import com.nnk.springboot.exception.EntityNotFoundException;
 
 public interface IRatingService {
+	/**
+	 * Get One Rating object
+	 * 
+	 * @param id : id of the rating object which we want to get
+	 * @return rating object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	Rating getRating(Integer id) throws EntityNotFoundException;
 
 	/**
 	 * 
-	 * Add a new rating ** This operation allows to check if the id of the rating we
-	 * want to add already exists in the database, then allows to add it
-	 * 
+	 * Add a new rating
 	 *
 	 * @param rating : rating object to add
 	 * @return rating object added
-	 * @throws Exception
 	 */
-	Rating addNewRating(Rating rating) throws Exception;
+	Rating addNewRating(Rating rating);
 
 	/**
-	 * Update information of the rating ** This operation allows to check if the id
-	 * of the rating we want to update already exists in the database,
+	 * Update information of the rating
 	 * 
 	 * @param id     : the id of the rating we want to update
 	 * @param rating : the rating Object updated
 	 * @return rating object updated
-	 * @throws Exception
+	 * @throws EntityAlreadyExistException
 	 */
-	Rating updateBide(Integer id, Rating rating) throws Exception;
+	public Rating updateRating(Integer id, Rating rating) throws EntityNotFoundException;
 
 	/**
 	 * get all ratings
@@ -37,13 +43,11 @@ public interface IRatingService {
 	List<Rating> ratingList();
 
 	/**
-	 * Delete the rating ** This operation allows to check if the id of the rating
-	 * we want to delete already exist in the database, then allows to use its id to
-	 * delete it
+	 * Delete the rating
 	 * 
 	 * @param id : id of the rating we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	void deleteRating(Integer id) throws Exception;
+	void deleteRating(Integer id) throws EntityNotFoundException;
 
 }

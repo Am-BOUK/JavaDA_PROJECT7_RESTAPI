@@ -31,7 +31,7 @@ public class BidListServiceImpl implements IBidListService {
 	 * want to get its information already exist in the database, then allows to use
 	 * its id to get him
 	 * 
-	 * @param user : user object whose we want to get
+	 * @param id : id of the bid object which we want to get
 	 * @return person object if it exists
 	 * @throws EntityNotFoundException
 	 */
