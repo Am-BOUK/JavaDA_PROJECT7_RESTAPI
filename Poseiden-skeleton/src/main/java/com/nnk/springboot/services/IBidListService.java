@@ -3,31 +3,37 @@ package com.nnk.springboot.services;
 import java.util.List;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.exception.EntityNotFoundException;
 
 public interface IBidListService {
+	/**
+	 * Get One bid object
+	 * 
+	 * @param user : user object whose we want to get
+	 * @return person object if it exists
+	 * @throws EntityNotFoundException
+	 */
+
+	public BidList getBid(Integer id) throws EntityNotFoundException;
 
 	/**
 	 * 
-	 * Add a new bid ** This operation allows to check if the id of the bide we want
-	 * to add already exists in the database, then allows to add it
-	 * 
+	 * Add a new bid
 	 *
 	 * @param bid : BidList object to add
 	 * @return
-	 * @throws Exception
 	 */
-	BidList addNewBid(BidList bid) throws Exception;
+	BidList addNewBid(BidList bid);
 
 	/**
-	 * Update information of the bid ** This operation allows to check if the id of
-	 * the bid we want to update already exists in the database,
+	 * Update information of the bid
 	 * 
 	 * @param id  : the id of the bid we want to update
 	 * @param bid : the Bid Object updated
 	 * @return BidList object updated
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	BidList updateBide(Integer id, BidList bid) throws Exception;
+	BidList updateBide(Integer id, BidList bid) throws EntityNotFoundException;
 
 	/**
 	 * get all Bids
@@ -37,13 +43,11 @@ public interface IBidListService {
 	List<BidList> bidList();
 
 	/**
-	 * Delete the bid ** This operation allows to check if the id of te bid we want
-	 * to delete already exist in the database, then allows to use its id to delete
-	 * it
+	 * Delete the bid
 	 * 
 	 * @param id : id of the bid we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	void deleteBid(Integer id) throws Exception;
+	void deleteBid(Integer id) throws EntityNotFoundException;
 
 }

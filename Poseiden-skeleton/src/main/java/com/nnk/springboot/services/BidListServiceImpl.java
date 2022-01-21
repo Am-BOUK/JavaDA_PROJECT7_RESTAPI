@@ -1,5 +1,7 @@
 package com.nnk.springboot.services;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exception.EntityAlreadyExistException;
+import com.nnk.springboot.exception.EntityNotFoundException;
 import com.nnk.springboot.repositories.BidListRepository;
 
 @Service
@@ -23,6 +28,27 @@ public class BidListServiceImpl implements IBidListService {
 	private BidListRepository bidListRepository;
 
 	/**
+	 * Get One bid object ** This operation allows to check if the id of the bid we
+	 * want to get its information already exist in the database, then allows to use
+	 * its id to get him
+	 * 
+	 * @param user : user object whose we want to get
+	 * @return person object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	@Override
+	public BidList getBid(Integer id) throws EntityNotFoundException {
+		logger.info("Getting bid : " + id);
+		Optional<BidList> bidFound = bidListRepository.findById(id);
+		if (bidFound.isEmpty()) {
+			logger.error("The bid : " + id + ", you want to get, does not exist!");
+			throw new EntityNotFoundException("The bid : " + id + ", you want to get, does not exist!");
+		}
+		logger.info("Bid : " + id + ", found");
+		return bidFound.get();
+	}
+
+	/**
 	 * 
 	 * Add a new bid ** This operation allows to check if the id of the bide we want
 	 * to add already exists in the database, then allows to add it
@@ -30,18 +56,13 @@ public class BidListServiceImpl implements IBidListService {
 	 *
 	 * @param bid : BidList object to add
 	 * @return BidList object added
-	 * @throws Exception
 	 */
 	@Override
-	public BidList addNewBid(BidList bid) throws Exception {
-		logger.info("adding new Bid");
-		Optional<BidList> bidFound = bidListRepository.findById(bid.getBidListId());
-		if (bidFound.isPresent()) {
-			logger.error("The dib id : " + bid.getBidListId() + ", you want to add, is already exists!");
-			throw new Exception("The dib id : " + bid.getBidListId() + ", is already exists!");
-		}
-
-		logger.info("add bid id : " + bid.getBidListId());
+	public BidList addNewBid(BidList bid) {
+		logger.info("add bid " + bid.toString());
+		Date currentDate = new Date();
+		Timestamp creationBidTimestamp = new Timestamp(currentDate.getTime());
+		bid.setCreationDate(creationBidTimestamp);
 		return bidListRepository.save(bid);
 	}
 
@@ -52,15 +73,15 @@ public class BidListServiceImpl implements IBidListService {
 	 * @param id  : the id of the bid we want to update
 	 * @param bid : the Bid Object updated
 	 * @return BidList object updated
-	 * @throws Exception
+	 * @throws EntityAlreadyExistException
 	 */
 	@Override
-	public BidList updateBide(Integer id, BidList bid) throws Exception {
+	public BidList updateBide(Integer id, BidList bid) throws EntityNotFoundException {
 		logger.info("updating a Bid");
 		Optional<BidList> bidFound = bidListRepository.findById(id);
 		if (bidFound == null) {
 			logger.error("The dib id : " + bid.getBidListId() + ", you want to update, does not exist!");
-			throw new Exception("The dib id : " + bid.getBidListId() + ", is already exists!");
+			throw new EntityNotFoundException("The dib id : " + bid.getBidListId() + ", is already exists!");
 		}
 		logger.info("update bid id : " + id);
 		bidFound.get().setAccount(bid.getAccount() != null ? bid.getAccount() : bidFound.get().getAccount());
@@ -92,12 +113,12 @@ public class BidListServiceImpl implements IBidListService {
 	 * @throws Exception
 	 */
 	@Override
-	public void deleteBid(Integer id) throws Exception {
+	public void deleteBid(Integer id) throws EntityNotFoundException {
 		logger.info("deleting a Bid");
 		Optional<BidList> bidFound = bidListRepository.findById(id);
 		if (bidFound.isEmpty()) {
 			logger.error("The dib id : " + id + ", you want to delete, does not exist!");
-			throw new Exception("The dib id : " + id + ", you want to delete, does not exist!");
+			throw new EntityNotFoundException("The dib id : " + id + ", you want to delete, does not exist!");
 		}
 
 		logger.info("delete the Bid id " + id);
