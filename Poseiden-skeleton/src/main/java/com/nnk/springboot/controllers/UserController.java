@@ -96,7 +96,7 @@ public class UserController {
 	 */
 	@GetMapping("/user/update/{id}")
 	public String showUpdateForm(@PathVariable("id") Integer id, Model model) throws EntityNotFoundException {
-		logger.info("Show Upfate Form");
+		logger.info("Show Update Form");
 		User user = userService.getUser(id);
 		user.setPassword("");
 		model.addAttribute("user", user);

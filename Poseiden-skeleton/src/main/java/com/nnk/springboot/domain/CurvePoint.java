@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "curvepoint")
 public class CurvePoint {
-	// TODO: Map columns in data table CURVEPOINT with corresponding java fields
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(length = 4)
@@ -18,7 +17,9 @@ public class CurvePoint {
 	@NotNull(message = "must not be null")
 	private Integer curveId;
 	private Timestamp asOfDate;
+	@NotBlank(message = "Term is mandatory.")
 	private Double term;
+	@NotBlank(message = "Value is mandatory.")
 	private Double value;
 	private Timestamp creationDate;
 
