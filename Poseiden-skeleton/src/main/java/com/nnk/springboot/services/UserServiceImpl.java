@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exception.EntityAlreadyExistException;
+import com.nnk.springboot.exception.EntityNotFoundException;
 import com.nnk.springboot.repositories.UserRepository;
 
 @Service
@@ -26,6 +28,27 @@ public class UserServiceImpl implements IUserService {
 	private PasswordEncoder passwordEncoder;
 
 	/**
+	 * Get One user object ** This operation allows to check if the id of the user
+	 * we want to get its information already exist in the database, then allows to
+	 * use its id to get him
+	 * 
+	 * @param id : id of the user object whose we want to get
+	 * @return user object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	@Override
+	public User getUser(Integer id) throws EntityNotFoundException {
+		logger.info("Getting user : " + id);
+		Optional<User> userFound = userRepository.findById(id);
+		if (userFound.isEmpty()) {
+			logger.error("The user : " + id + ", you want to get, does not exist!");
+			throw new EntityNotFoundException("The user : " + id + ", you want to get, does not exist!");
+		}
+		logger.info("User : " + id + ", found");
+		return userFound.get();
+	}
+
+	/**
 	 * 
 	 * Add a new user ** This operation allows to check if the id of the user we
 	 * want to add already exists in the database, then allows to add it
@@ -33,15 +56,15 @@ public class UserServiceImpl implements IUserService {
 	 *
 	 * @param user : user object to add
 	 * @return user object added
-	 * @throws Exception
+	 * @throws EntityAlreadyExistException
 	 */
 	@Override
-	public User addNewUser(User user) throws Exception {
+	public User addNewUser(User user) throws EntityAlreadyExistException {
 		logger.info("adding new Bid");
 		Optional<User> userFound = userRepository.findByUsername(user.getUsername());
 		if (userFound.isPresent()) {
 			logger.error("The user id : " + user.getId() + ", you want to add, is already exists!");
-			throw new Exception("The user id : " + user.getId() + ", is already exists!");
+			throw new EntityAlreadyExistException("The user id : " + user.getId() + ", is already exists!");
 		}
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
@@ -57,13 +80,13 @@ public class UserServiceImpl implements IUserService {
 	 * @throws Exception
 	 */
 	@Override
-	public User updateUser(Integer id, User user) throws Exception {
+	public User updateUser(Integer id, User user) throws EntityNotFoundException {
 		logger.info("updating new Bid");
 
 		Optional<User> userFound = userRepository.findById(id);
 		if (userFound.isEmpty()) {
 			logger.error("The user id : " + id + ", you want to update, does not exist!");
-			throw new Exception("The user id : " + id + ", you want to update, does not exist!");
+			throw new EntityNotFoundException("The user id : " + id + ", you want to update, does not exist!");
 		}
 		userFound.get().setFullname(user.getFullname() != null ? user.getFullname() : userFound.get().getFullname());
 		userFound.get().setPassword(user.getPassword() != null ? passwordEncoder.encode(user.getPassword())
@@ -95,14 +118,12 @@ public class UserServiceImpl implements IUserService {
 	 * @throws Exception
 	 */
 	@Override
-	public void deleteUser(Integer id) throws Exception {
+	public void deleteUser(Integer id) throws EntityNotFoundException {
 		logger.info("deleting user");
-//		User userFound = userRepository.findById(id)
-//				.orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 		Optional<User> userFound = userRepository.findById(id);
 		if (userFound.isEmpty()) {
 			logger.error("The user id : " + id + ", you want to delete, does not exist!");
-			throw new Exception("The user id : " + id + ", you want to delete, does not exist!");
+			throw new EntityNotFoundException("The user id : " + id + ", you want to delete, does not exist!");
 		}
 		logger.info("delete user id : " + id);
 		userRepository.delete(userFound.get());

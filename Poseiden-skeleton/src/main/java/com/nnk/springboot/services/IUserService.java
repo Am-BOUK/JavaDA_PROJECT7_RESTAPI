@@ -3,30 +3,41 @@ package com.nnk.springboot.services;
 import java.util.List;
 
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exception.EntityAlreadyExistException;
+import com.nnk.springboot.exception.EntityNotFoundException;
 
+/**
+ * implementation of user business processing
+ * 
+ */
 public interface IUserService {
+	/**
+	 * Get One user object
+	 * 
+	 * @param id : id of the user object whose we want to get
+	 * @return user object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	User getUser(Integer id) throws EntityNotFoundException;
 
 	/**
 	 * 
-	 * Add a new user ** This operation allows to check if the id of the user we
-	 * want to add already exists in the database, then allows to add it
+	 * Add a new user
 	 * 
-	 *
 	 * @param user : user object to add
 	 * @return user object added
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	User addNewUser(User user) throws Exception;
+	User addNewUser(User user) throws EntityAlreadyExistException;
 
 	/**
-	 * Update information of the user ** This operation allows to check if the id of
-	 * the user we want to update already exists in the database,
+	 * Update information of the user
 	 * 
 	 * @param user : the user Object updated
 	 * @return user object updated
 	 * @throws Exception
 	 */
-	User updateUser(Integer id, User user) throws Exception;
+	User updateUser(Integer id, User user) throws EntityNotFoundException;
 
 	/**
 	 * get all users
@@ -36,13 +47,11 @@ public interface IUserService {
 	List<User> usersList();
 
 	/**
-	 * Delete the user ** This operation allows to check if the id of te user we
-	 * want to delete already exist in the database, then allows to use its id to
-	 * delete it
+	 * Delete the user
 	 * 
 	 * @param id : id of the user we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	void deleteUser(Integer id) throws Exception;
+	void deleteUser(Integer id) throws EntityNotFoundException;
 
 }
