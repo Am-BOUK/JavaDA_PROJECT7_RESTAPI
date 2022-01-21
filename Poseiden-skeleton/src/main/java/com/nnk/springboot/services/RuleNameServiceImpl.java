@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.exception.EntityNotFoundException;
 import com.nnk.springboot.repositories.RuleNameRepository;
 
 @Service
@@ -23,6 +24,27 @@ public class RuleNameServiceImpl implements IRuleNameService {
 	private RuleNameRepository ruleNameRepository;
 
 	/**
+	 * Get One RuleName object ** This operation allows to check if the id of the
+	 * RuleName we want to get its information already exist in the database, then
+	 * allows to use its id to get him
+	 * 
+	 * @param id : id of the RuleName object whose we want to get
+	 * @return RuleName object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	@Override
+	public RuleName getRuleName(Integer id) throws EntityNotFoundException {
+		logger.info("Getting RuleName : " + id);
+		Optional<RuleName> ruleNameFound = ruleNameRepository.findById(id);
+		if (ruleNameFound.isEmpty()) {
+			logger.error("The RuleName : " + id + ", you want to get, does not exist!");
+			throw new EntityNotFoundException("The RuleName : " + id + ", you want to get, does not exist!");
+		}
+		logger.info("User : " + id + ", found");
+		return ruleNameFound.get();
+	}
+
+	/**
 	 * 
 	 * Add a new RuleName ** This operation allows to check if the id of the
 	 * RuleName we want to add already exists in the database, then allows to add it
@@ -30,18 +52,10 @@ public class RuleNameServiceImpl implements IRuleNameService {
 	 *
 	 * @param ruleName : RuleName object to add
 	 * @return RuleName object added
-	 * @throws Exception
 	 */
 	@Override
-	public RuleName addNewRuleName(RuleName ruleName) throws Exception {
-		logger.info("adding new RuleName");
-		Optional<RuleName> ruleNameFound = ruleNameRepository.findById(ruleName.getId());
-		if (ruleNameFound.isPresent()) {
-			logger.error("The ruleName id : " + ruleName.getId() + ", you want to add, is already exists!");
-			throw new Exception("The ruleName id : " + ruleName.getId() + ", is already exists!");
-		}
-
-		logger.info("add ruleName id : " + ruleName.getId());
+	public RuleName addNewRuleName(RuleName ruleName) {
+		logger.info("add ruleName : " + ruleName.toString());
 		return ruleNameRepository.save(ruleName);
 	}
 
@@ -52,15 +66,15 @@ public class RuleNameServiceImpl implements IRuleNameService {
 	 * @param id       : the id of the ruleName we want to update
 	 * @param ruleName : the ruleName Object updated
 	 * @return ruleName object updated
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public RuleName updateRuleName(Integer id, RuleName ruleName) throws Exception {
+	public RuleName updateRuleName(Integer id, RuleName ruleName) throws EntityNotFoundException {
 		logger.info("updating a RuleName");
 		Optional<RuleName> ruleNameFound = ruleNameRepository.findById(ruleName.getId());
 		if (ruleNameFound.isEmpty()) {
 			logger.error("The ruleName id : " + id + ", you want to update, does not exist!");
-			throw new Exception("The ruleName id : " + id + ", is already exists!");
+			throw new EntityNotFoundException("The ruleName id : " + id + ", you want to update, does not exist!");
 		}
 		logger.info("update ruleName id : " + id);
 		ruleNameFound.get().setName(ruleName.getName() != null ? ruleName.getName() : ruleNameFound.get().getName());
@@ -95,15 +109,15 @@ public class RuleNameServiceImpl implements IRuleNameService {
 	 * its id to delete it
 	 * 
 	 * @param id : id of the ruleName we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public void deleteRuleName(Integer id) throws Exception {
+	public void deleteRuleName(Integer id) throws EntityNotFoundException {
 		logger.info("deleting a RuleName");
 		Optional<RuleName> ruleNameFound = ruleNameRepository.findById(id);
 		if (ruleNameFound.isEmpty()) {
 			logger.error("The ruleName id : " + id + ", you want to delete, does not exist!");
-			throw new Exception("The ruleName id : " + id + ", you want to delete, does not exist!");
+			throw new EntityNotFoundException("The ruleName id : " + id + ", you want to delete, does not exist!");
 		}
 
 		logger.info("delete the ruleName id " + id);

@@ -3,31 +3,37 @@ package com.nnk.springboot.services;
 import java.util.List;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.exception.EntityNotFoundException;
 
 public interface IRuleNameService {
 
 	/**
+	 * Get One RuleName object
 	 * 
-	 * Add a new RuleName ** This operation allows to check if the id of the
-	 * RuleName we want to add already exists in the database, then allows to add it
+	 * @param id : id of the RuleName object whose we want to get
+	 * @return RuleName object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	RuleName getRuleName(Integer id) throws EntityNotFoundException;
+
+	/**
 	 * 
+	 * Add a new RuleName
 	 *
 	 * @param ruleName : RuleName object to add
 	 * @return RuleName object added
-	 * @throws Exception
 	 */
-	RuleName addNewRuleName(RuleName ruleName) throws Exception;
+	RuleName addNewRuleName(RuleName ruleName);
 
 	/**
-	 * Update information of the ruleName ** This operation allows to check if the
-	 * id of the ruleName we want to update already exists in the database,
+	 * Update information of the ruleName
 	 * 
 	 * @param id       : the id of the ruleName we want to update
 	 * @param ruleName : the ruleName Object updated
 	 * @return ruleName object updated
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	RuleName updateRuleName(Integer id, RuleName ruleName) throws Exception;
+	RuleName updateRuleName(Integer id, RuleName ruleName) throws EntityNotFoundException;
 
 	/**
 	 * get all ruleNames
@@ -37,13 +43,11 @@ public interface IRuleNameService {
 	List<RuleName> ruleNameList();
 
 	/**
-	 * Delete the ruleName ** This operation allows to check if the id of te ruleName we want
-	 * to delete already exist in the database, then allows to use its id to delete
-	 * it
+	 * Delete the ruleName
 	 * 
 	 * @param id : id of the ruleName we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
-	void deleteRuleName(Integer id) throws Exception;
+	void deleteRuleName(Integer id) throws EntityNotFoundException;
 
 }
