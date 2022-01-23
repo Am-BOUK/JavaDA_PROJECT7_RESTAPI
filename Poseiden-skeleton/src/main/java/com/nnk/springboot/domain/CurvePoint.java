@@ -7,6 +7,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
+/**
+ * 
+ * implementation of business object: Curve Point that will be manipulated by
+ * the other layers.
+ *
+ * the Curve Point has six attributes : id, curveId, asOfDate, term, value and
+ * creationDate
+ */
 @Entity
 @Table(name = "curvepoint")
 public class CurvePoint {
