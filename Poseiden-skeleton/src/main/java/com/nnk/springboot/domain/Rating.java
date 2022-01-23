@@ -5,10 +5,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
+/**
+ * 
+ * implementation of business object: Rating that will be manipulated by the
+ * other layers.
+ *
+ * the Rating has five attributes : id, moodysRating, sandPRating, fitchRating
+ * and orderNumber
+ */
 @Entity
 @Table(name = "rating")
 public class Rating {
-	// TODO: Map columns in data table RATING with corresponding java fields
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(length = 4)
@@ -28,16 +35,12 @@ public class Rating {
 		this.fitchRating = fitchRating;
 		this.orderNumber = orderNumber;
 	}
-	
-	
 
 	@Override
 	public String toString() {
 		return "Rating [id=" + id + ", moodysRating=" + moodysRating + ", sandPRating=" + sandPRating + ", fitchRating="
 				+ fitchRating + ", orderNumber=" + orderNumber + "]";
 	}
-
-
 
 	public Integer getId() {
 		return id;
