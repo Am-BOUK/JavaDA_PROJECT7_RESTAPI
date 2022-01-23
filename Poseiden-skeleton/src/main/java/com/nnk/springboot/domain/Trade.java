@@ -5,11 +5,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
-
+/**
+ * 
+ * implementation of business object: Trade that will be manipulated by the
+ * other layers.
+ *
+ * the Trade has twenty-one attributes : tradeId, account, type,
+ * bidQuantity, sellQuantity, buyPrice, sellPrice, tradeDate, security, status,
+ * trader, benchmark, book, creationName, creationDate, revisionName,
+ * revisionDate, dealName, dealType, sourceListId and side
+ */
 @Entity
 @Table(name = "trade")
 public class Trade {
-	// TODO: Map columns in data table TRADE with corresponding java fields
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(length = 4)

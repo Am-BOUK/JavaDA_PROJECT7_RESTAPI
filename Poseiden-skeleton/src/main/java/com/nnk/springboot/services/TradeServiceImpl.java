@@ -1,5 +1,7 @@
 package com.nnk.springboot.services;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +10,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.exception.EntityAlreadyExistException;
+import com.nnk.springboot.exception.EntityNotFoundException;
 import com.nnk.springboot.repositories.TradeRepository;
 
 @Service
@@ -22,25 +27,40 @@ public class TradeServiceImpl implements ITradeService {
 	private TradeRepository tradeRepository;
 
 	/**
+	 * Get One trade object ** This operation allows to check if the id of the trade
+	 * we want to get his information already exist in the database, then allows to
+	 * use its id to get him
+	 * 
+	 * @param id : id of the trade object which we want to get
+	 * @return trade object if it exists
+	 * @throws EntityNotFoundException
+	 */
+	@Override
+	public Trade getTrade(Integer id) throws EntityNotFoundException {
+		logger.info("Getting Trade id : " + id);
+		Optional<Trade> tradeFound = tradeRepository.findById(id);
+		if (tradeFound.isEmpty()) {
+			logger.error("The Trade id : " + id + ", you want to get, does not exist!");
+			throw new EntityNotFoundException("The Trade id : " + id + ", you want to get, does not exist!");
+		}
+		logger.info("Trade id : " + id + ", found");
+		return tradeFound.get();
+	}
+
+	/**
 	 * 
 	 * Add a new Trade ** This operation allows to check if the id of the Trade we
 	 * want to add already exists in the database, then allows to add it
 	 * 
-	 *
 	 * @param Trade : Trade object to add
 	 * @return Trade object added
-	 * @throws Exception
 	 */
 	@Override
-	public Trade addNewTrade(Trade trade) throws Exception {
-		logger.info("adding new Trade");
-		Optional<Trade> tradeFound = tradeRepository.findById(trade.getTradeId());
-		if (tradeFound.isPresent()) {
-			logger.error("The trade id : " + trade.getTradeId() + ", you want to add, is already exists!");
-			throw new Exception("The trade id : " + trade.getTradeId() + ", is already exists!");
-		}
-
+	public Trade addNewTrade(Trade trade) {
 		logger.info("add Trade id : " + trade.getTradeId());
+		Date currentDate = new Date();
+		Timestamp creationBidTimestamp = new Timestamp(currentDate.getTime());
+		trade.setCreationDate(creationBidTimestamp);
 		return tradeRepository.save(trade);
 	}
 
@@ -51,15 +71,15 @@ public class TradeServiceImpl implements ITradeService {
 	 * @param id    : the id of the Trade we want to update
 	 * @param Trade : the Trade Object updated
 	 * @return Trade object updated
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public Trade updateTradee(Integer id, Trade trade) throws Exception {
+	public Trade updateTradee(Integer id, Trade trade) throws EntityNotFoundException {
 		logger.info("updating a Trade");
 		Optional<Trade> tradeFound = tradeRepository.findById(id);
 		if (tradeFound.isEmpty()) {
 			logger.error("The trade id : " + trade.getTradeId() + ", you want to update, does not exist!");
-			throw new Exception("The trade id : " + trade.getTradeId() + ", is already exists!");
+			throw new EntityNotFoundException("The trade id : " + trade.getTradeId() + ", you want to update, does not exist!\"");
 		}
 
 		logger.info("update Trade id : " + id);
@@ -120,15 +140,15 @@ public class TradeServiceImpl implements ITradeService {
 	 * delete it
 	 * 
 	 * @param id : id of the Trade we want to delete
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public void deleteTrade(Integer id) throws Exception {
+	public void deleteTrade(Integer id) throws EntityNotFoundException {
 		logger.info("deleting a Trade");
 		Optional<Trade> tradeFound = tradeRepository.findById(id);
 		if (tradeFound.isEmpty()) {
 			logger.error("The trade id : " + id + ", you want to delete, does not exist!");
-			throw new Exception("The trade id : " + id + ", you want to delete, does not exist!");
+			throw new EntityNotFoundException("The trade id : " + id + ", you want to delete, does not exist!");
 		}
 
 		logger.info("delete the Trade id " + id);
