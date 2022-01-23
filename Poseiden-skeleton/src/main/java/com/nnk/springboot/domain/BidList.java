@@ -8,10 +8,19 @@ import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+/**
+ * 
+ * implementation of business object: Bid List that will be manipulated by the
+ * other layers.
+ *
+ * the Bid List has twenty-one attributes : BidListId, account, type,
+ * bidQuantity, askQuantity, bid, ask, benchmark, bidListDate, commentary,
+ * security, status, trader, book, creationName, creationDate, revisionName,
+ * revisionDate, dealName, sourceListId and side
+ */
 @Entity
 @Table(name = "bidlist")
 public class BidList {
-	// TODO: Map columns in data table BIDLIST with corresponding java fields
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(length = 4)
@@ -58,8 +67,6 @@ public class BidList {
 	private String sourceListId;
 	@Column(length = 125)
 	private String side;
-	
-	
 
 	@Override
 	public String toString() {
